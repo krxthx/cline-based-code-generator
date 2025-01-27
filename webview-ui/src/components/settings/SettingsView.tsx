@@ -159,6 +159,11 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 		setTimeout(() => setShowCopied(false), 2000);
 	};
 
+	const handleAutoGenerateInstructions = () => {
+		vscode.postMessage({ type: "autoGenerateInstructions" });
+	};
+
+
 	return (
 		<div
 			style={{
@@ -301,6 +306,20 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 						}}>
 					This feature enables the addition of markdown (.md) instruction files that provide specific behavioral guidelines to the LLM [ex: "always write tests first", "follow BEM naming for CSS"]. Each enabled instruction file's content is automatically appended to the system prompt for every API request. For workspace-wide instructions that apply across all directories, create a .hairules file in your root directory [ex: global code style preferences, project-specific documentation requirements].					</p>
 				</div>
+
+				<VSCodeButton
+					style={{
+						width: "100%",
+						marginTop: "10px",
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
+					}}
+					onClick={handleAutoGenerateInstructions}
+				>
+					<span className="codicon codicon-file-code" style={{ marginRight: "5px" }}></span>
+					Auto Generate Custom Instructions
+				</VSCodeButton>
 
 				<div style={{ marginBottom: 5 }}>
 					<VSCodeCheckbox

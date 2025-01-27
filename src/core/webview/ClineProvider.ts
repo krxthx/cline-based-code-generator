@@ -39,6 +39,7 @@ import delay from "delay"
 import { AutoApprovalSettings, DEFAULT_AUTO_APPROVAL_SETTINGS } from "../../shared/AutoApprovalSettings"
 import { HaiBuildDefaults } from "../../shared/haiDefaults"
 import { buildEmbeddingHandler } from "../../embedding"
+import { generateConventions } from "../../integrations/conventions/generate-conventions"
 
 /*
 https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/default/weather-webview/src/providers/WeatherViewProvider.ts
@@ -910,6 +911,17 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 						}
 
 						break
+					case "autoGenerateInstructions":
+						vscode.window.showInformationMessage("Generating Instruction File.");
+						const { apiConfiguration } = await this.getState()
+						const instructionsDir = path.join(this.vsCodeWorkSpaceFolderFsPath, ".vscode", "hai-instructions");
+						await fs.mkdir(instructionsDir, { recursive: true });
+						const filePath = path.join(instructionsDir, "hai-instructions.md");
+						const content = await generateConventions(apiConfiguration)
+						await fs.writeFile(filePath, content, "utf8");
+						vscode.window.showInformationMessage("Custom instructions file generated successfully.");
+						break;
+
 					case "openMcpSettings": {
 						const mcpSettingsFilePath = await this.mcpHub?.getMcpSettingsFilePath()
 						if (mcpSettingsFilePath) {

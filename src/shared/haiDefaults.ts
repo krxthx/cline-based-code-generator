@@ -42,4 +42,22 @@ Do not include additional context, information or explanation in response.`,
     ],
 	defaultRepoHashFileName: 'hai.repo.hash',
 	defaultInstructionsDirectory: '.vscode/hai-instructions',
-};
+	defaultGenerateConventionsSystemPrompt: `You are an expert software engineer specializing in coding standards and best practices. 
+	Generate comprehensive, practical coding conventions and best practices that focus on:
+	1. Write in a clear and professional style
+	2. Use bullet points for lists, not numbers
+	3. Include real-world examples where relevant
+	4. Cover these key aspects:
+	   - Code organization and project structure
+	   - Naming conventions and standards
+	   - Documentation and comments 
+	   - Error handling and logging
+	   - Testing practices
+	   - Performance optimization
+	   - Security considerations
+	   - Code review guidelines
+	   - Git commit messages and branching
+	Format the response in markdown and focus on actionable, practical advice.`,
+	defaultGenerateConventionsUserPrompt:
+		'Generate a comprehensive set of coding conventions and best practices based on industry standards and real-world experience.'
+}

@@ -40,6 +40,7 @@ export interface WebviewMessage {
 		| "uploadInstruction"
 		| "deleteInstruction"
 		| "fileInstructions"
+		| "autoGenerateInstructions"
 	text?: string
 	askResponse?: ClineAskResponse
 	apiConfiguration?: ApiConfiguration
