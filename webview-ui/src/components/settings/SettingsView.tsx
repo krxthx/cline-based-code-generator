@@ -36,7 +36,7 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 	const [embeddingErrorMessage, setEmbeddingErrorMessage] = useState<string | undefined>(undefined)
 	const [showCopied, setShowCopied] = useState(false);
 	const [trashClickedFiles, setTrashClickedFiles] = useState<Set<string>>(new Set());
-	const [isInstructionTemplateGenerated, setIsInstructionTemplateGenerated] = useState<boolean | undefined>(undefined);
+	const [isInstructionTemplateGenerated, setIsInstructionTemplateGenerated] = useState<boolean>(false);
 
     const toggleTrashClicked = (filename: string) => {
         setTrashClickedFiles(prev => {
@@ -57,7 +57,7 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
     }, [apiConfiguration, embeddingConfiguration])
 
 	useEffect(() => {
-		setIsInstructionTemplateGenerated(fileInstructions?.some((file) => file.name === INSTRUCTION_TEMPLATE_FILE_NAME));
+		setIsInstructionTemplateGenerated(fileInstructions?.some((file) => file.name === INSTRUCTION_TEMPLATE_FILE_NAME) ?? false);
 	}, [fileInstructions])
 
 	const handleSubmit = () => {
@@ -175,7 +175,7 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 		vscode.postMessage({ 
 			type: "showToast", 
 			toast: { 
-				message: TOAST_MESSAGES.INSTRUCTION_TEMPLATE.GENERATING, 
+				message: isInstructionTemplateGenerated ? TOAST_MESSAGES.INSTRUCTION_TEMPLATE.REGENERATING : TOAST_MESSAGES.INSTRUCTION_TEMPLATE.GENERATING, 
 				toastType: "info" 
 			}
 		});

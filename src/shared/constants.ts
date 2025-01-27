@@ -11,6 +11,7 @@ export const INSTRUCTION_TEMPLATE_FILE_NAME = "hai-instructions.md";
 export const TOAST_MESSAGES = {
     INSTRUCTION_TEMPLATE: {
         GENERATING: "Generating Instruction File...",
-        CREATED: "Custom instructions file generated successfully...",
+        REGENERATING: "Regenerating Instruction File...",
+        CREATED: "Custom instructions file generated successfully",
     },
 }
