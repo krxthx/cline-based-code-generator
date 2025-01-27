@@ -888,6 +888,11 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 						openImage(message.text!)
 						break
 					case "openFile":
+						if (message.fileInstructions) {
+							const instructionFile = path.join(this.vsCodeWorkSpaceFolderFsPath, HaiBuildDefaults.defaultInstructionsDirectory, message.fileInstructions[0].name);
+							openFile(instructionFile)
+							break;
+						}
 						openFile(message.text!)
 						break
 					case "openMention":

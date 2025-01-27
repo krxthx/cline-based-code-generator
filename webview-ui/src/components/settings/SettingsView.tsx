@@ -137,6 +137,13 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 		e.target.files = null;
 	};
 
+	const handleOpenFile = (filename: string) => {
+		vscode.postMessage({
+			type: "openFile",
+			fileInstructions: [{ name: filename }]
+		});
+	};
+
     const handleDeleteFile = (filename: string) => {
 		vscode.postMessage({
 			type: "deleteInstruction",
@@ -162,7 +169,6 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 	const handleAutoGenerateInstructions = () => {
 		vscode.postMessage({ type: "autoGenerateInstructions" });
 	};
-
 
 	return (
 		<div
@@ -244,61 +250,69 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
                         multiple
                     />
 
-                    {fileInstructions && (fileInstructions.length) > 0 && (
-                        <div style={{ marginTop: "10px", display: "flex", flexDirection: "column", gap: "5px" }}>
-                            {fileInstructions.map((file) => (
-                                <div
-                                    key={file.name}
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                        padding: '8px',
-                                        backgroundColor: 'var(--vscode-input-background)',
-                                        borderRadius: '3px',
-                                        color: 'var(--vscode-foreground)',
-                                        opacity: 0.6
-                                    }}
-                                >
-                                    <span style={{
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap',
-                                        marginRight: '10px'
-                                    }}>
-                                        {file.name}
-                                    </span>
-                                    {!trashClickedFiles.has(file.name) ? (
-                                        <VSCodeButton
-                                            appearance="icon"
-                                            onClick={() => toggleTrashClicked(file.name)}
-                                        >
-                                            <span className="codicon codicon-trash"></span>
-                                        </VSCodeButton>
-                                    ) : (
-                                        <div style={{ display: 'flex', gap: '4px' }}>
-                                            <VSCodeButton
-                                                appearance="icon"
-                                                onClick={() => toggleTrashClicked(file.name)}
-                                            >
-                                                <span className="codicon codicon-close"></span>
-                                            </VSCodeButton>
-                                            <VSCodeButton
-                                                appearance="icon"
-                                                onClick={() => {
-                                                    handleDeleteFile(file.name);
-                                                    toggleTrashClicked(file.name);
-                                                }}
-                                            >
-                                                <span className="codicon codicon-check"></span>
-                                            </VSCodeButton>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    )}
+					{fileInstructions && (fileInstructions.length) > 0 && (
+						<div style={{ marginTop: "10px", display: "flex", flexDirection: "column", gap: "5px" }}>
+							{fileInstructions.map((file) => (
+								<div
+									key={file.name}
+									style={{
+										display: 'flex',
+										alignItems: 'center',
+										padding: '8px',
+										backgroundColor: 'var(--vscode-input-background)',
+										borderRadius: '3px',
+										color: 'var(--vscode-foreground)',
+										opacity: 0.6
+									}}
+								>
+									<span style={{
+										overflow: 'hidden',
+										textOverflow: 'ellipsis',
+										whiteSpace: 'nowrap',
+										flexGrow: 1
+									}}>
+										{file.name}
+									</span>
 
+									<div style={{ display: 'flex', gap: '4px', marginLeft: 'auto' }}>
+										<VSCodeButton
+											appearance="icon"
+											onClick={() => handleOpenFile(file.name)}
+										>
+											<span className="codicon codicon-link-external"></span>
+										</VSCodeButton>
+
+										{!trashClickedFiles.has(file.name) ? (
+											<VSCodeButton
+												appearance="icon"
+												onClick={() => toggleTrashClicked(file.name)}
+											>
+												<span className="codicon codicon-trash"></span>
+											</VSCodeButton>
+										) : (
+											<div style={{ display: 'flex', gap: '4px' }}>
+												<VSCodeButton
+													appearance="icon"
+													onClick={() => toggleTrashClicked(file.name)}
+												>
+													<span className="codicon codicon-close"></span>
+												</VSCodeButton>
+												<VSCodeButton
+													appearance="icon"
+													onClick={() => {
+														handleDeleteFile(file.name);
+														toggleTrashClicked(file.name);
+													}}
+												>
+													<span className="codicon codicon-check"></span>
+												</VSCodeButton>
+											</div>
+										)}
+									</div>
+								</div>
+							))}
+						</div>
+					)}
                     <p style={{
 							fontSize: "12px",
 							marginTop: "5px",
