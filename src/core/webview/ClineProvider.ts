@@ -32,7 +32,7 @@ import { validateApiConfiguration, validateEmbeddingConfiguration } from "../../
 import { getFormattedDateTime } from "../../utils/date"
 import { EmbeddingProvider } from "../../shared/embeddings"
 import { ensureFaissPlatformDeps } from "../../utils/faiss"
-import { ACCEPTED_FILE_EXTENSIONS, FileOperations } from "../../utils/constants"
+import { ACCEPTED_FILE_EXTENSIONS, FileOperations, INSTRUCTION_TEMPLATE_FILE_NAME, TOAST_MESSAGES } from "../../shared/constants"
 import HaiFileSystemWatcher from "../../integrations/workspace/HaiFileSystemWatcher"
 import { deleteFromContextDirectory } from "../../utils/delete-helper"
 import delay from "delay"
@@ -917,14 +917,13 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 
 						break
 					case "autoGenerateInstructions":
-						vscode.window.showInformationMessage("Generating Instruction File.");
 						const { apiConfiguration } = await this.getState()
 						const instructionsDir = path.join(this.vsCodeWorkSpaceFolderFsPath, ".vscode", "hai-instructions");
 						await fs.mkdir(instructionsDir, { recursive: true });
-						const filePath = path.join(instructionsDir, "hai-instructions.md");
+						const filePath = path.join(instructionsDir, INSTRUCTION_TEMPLATE_FILE_NAME);
 						const content = await generateConventions(apiConfiguration)
 						await fs.writeFile(filePath, content, "utf8");
-						vscode.window.showInformationMessage("Custom instructions file generated successfully.");
+						vscode.window.showInformationMessage(TOAST_MESSAGES.INSTRUCTION_TEMPLATE.CREATED);
 						break;
 
 					case "openMcpSettings": {

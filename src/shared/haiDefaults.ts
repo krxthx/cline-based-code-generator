@@ -55,8 +55,6 @@ Do not include additional context, information or explanation in response.`,
 	   - Testing practices
 	   - Performance optimization
 	   - Security considerations
-	   - Code review guidelines
-	   - Git commit messages and branching
 	Format the response in markdown and focus on actionable, practical advice.`,
 	defaultGenerateConventionsUserPrompt:
 		'Generate a comprehensive set of coding conventions and best practices based on industry standards and real-world experience.'

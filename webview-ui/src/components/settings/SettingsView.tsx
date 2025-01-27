@@ -6,8 +6,8 @@ import { vscode } from "../../utils/vscode"
 import ApiOptions from "./ApiOptions"
 import SettingsViewExtra from "./SettingsViewExtra"
 import EmbeddingOptions from "./EmbeddingOptions"
-import { ACCEPTED_FILE_EXTENSIONS } from "../../utils/constants"
 import { HaiInstructionFile } from "../../../../src/shared/customApi"
+import { ACCEPTED_FILE_EXTENSIONS, INSTRUCTION_TEMPLATE_FILE_NAME, TOAST_MESSAGES } from "../../../../src/shared/constants"
 
 const IS_DEV = true // FIXME: use flags when packaging
 
@@ -36,6 +36,7 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 	const [embeddingErrorMessage, setEmbeddingErrorMessage] = useState<string | undefined>(undefined)
 	const [showCopied, setShowCopied] = useState(false);
 	const [trashClickedFiles, setTrashClickedFiles] = useState<Set<string>>(new Set());
+	const [isInstructionTemplateGenerated, setIsInstructionTemplateGenerated] = useState<boolean | undefined>(undefined);
 
     const toggleTrashClicked = (filename: string) => {
         setTrashClickedFiles(prev => {
@@ -54,6 +55,10 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
         setModelIdErrorMessage(undefined)
         setEmbeddingErrorMessage(undefined)
     }, [apiConfiguration, embeddingConfiguration])
+
+	useEffect(() => {
+		setIsInstructionTemplateGenerated(fileInstructions?.some((file) => file.name === INSTRUCTION_TEMPLATE_FILE_NAME));
+	}, [fileInstructions])
 
 	const handleSubmit = () => {
 		const apiValidationResult = validateApiConfiguration(apiConfiguration)
@@ -167,6 +172,13 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 	};
 
 	const handleAutoGenerateInstructions = () => {
+		vscode.postMessage({ 
+			type: "showToast", 
+			toast: { 
+				message: TOAST_MESSAGES.INSTRUCTION_TEMPLATE.GENERATING, 
+				toastType: "info" 
+			}
+		});
 		vscode.postMessage({ type: "autoGenerateInstructions" });
 	};
 
@@ -324,7 +336,6 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 				<VSCodeButton
 					style={{
 						width: "100%",
-						marginTop: "10px",
 						display: "flex",
 						alignItems: "center",
 						justifyContent: "center",
@@ -332,8 +343,16 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 					onClick={handleAutoGenerateInstructions}
 				>
 					<span className="codicon codicon-file-code" style={{ marginRight: "5px" }}></span>
-					Auto Generate Custom Instructions
+					{ isInstructionTemplateGenerated ? "Regenerate Custom Instructions" : "Generate Custom Instructions" }
 				</VSCodeButton>
+				<p style={{
+							fontSize: "12px",
+							marginTop: "5px",
+							color: "var(--vscode-descriptionForeground)",
+						}}>
+					Try the auto-generate feature to see examples of coding standards and best practices in action. This will help you understand how conventions are structured and applied.				
+				</p>
+
 
 				<div style={{ marginBottom: 5 }}>
 					<VSCodeCheckbox

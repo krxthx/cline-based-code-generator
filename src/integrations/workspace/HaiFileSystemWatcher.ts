@@ -4,7 +4,7 @@ import * as fs from "fs/promises"
 import ignore from "ignore"
 import { HaiBuildDefaults } from "../../shared/haiDefaults"
 import { ClineProvider } from "../../core/webview/ClineProvider"
-import { FileOperations } from "../../utils/constants"
+import { FileOperations } from "../../shared/constants"
 
 class HaiFileSystemWatcher {
 	private sourceFolder: string
